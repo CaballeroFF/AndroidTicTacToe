@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private int getTurnImage(boolean playerTurn) {
-        if (playerTurn) { 
+        if (playerTurn) {
             return R.drawable.ic_dot;
         }
         return R.drawable.ic_x;
@@ -274,6 +274,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.create().show();
     }
 
-    // TODO: 7/13/2019 landscape
-    // TODO: 7/13/2019 AI 
+    // TODO: 7/13/2019 AI
 }
