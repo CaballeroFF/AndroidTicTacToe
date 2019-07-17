@@ -2,6 +2,7 @@ package com.caballero.tictactoe;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView player1Text, player2Text;
     private Button resetButton;
 
+    private TicTacToeAI ticTacToeAI;
+
     private boolean player1Turn;
     private int player1Score;
     private int player2Score;
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initViews();
-
+        ticTacToeAI = new TicTacToeAI(boardValues, imageViews);
     }
 
     @Override
@@ -86,11 +89,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ((ImageView) v).setImageResource(R.drawable.ic_dot);
                 v.setTag(R.drawable.ic_dot);
                 turnImage.setImageResource(R.drawable.ic_x);
-            } else {
-                ((ImageView) v).setImageResource(R.drawable.ic_x);
-                v.setTag(R.drawable.ic_x);
-                turnImage.setImageResource(R.drawable.ic_dot);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageView opponent = ticTacToeAI.makeMove();
+                        opponent.setImageResource(R.drawable.ic_x);
+                        opponent.setTag(R.drawable.ic_x);
+                    }
+                }, 2000);
+
             }
+//            else {
+//                ((ImageView) v).setImageResource(R.drawable.ic_x);
+//                v.setTag(R.drawable.ic_x);
+//                turnImage.setImageResource(R.drawable.ic_dot);
+//            }
             turn++;
             evaluateBoard();
             player1Turn = !player1Turn;
@@ -155,8 +170,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int col = 0; col < COLS; col++) {
                 String tag = imageViews[row][col].getTag().toString();
                 boardValues[row][col] = tag;
+                ticTacToeAI.updateBoardValues(row, col, tag);
             }
         }
+        Log.d(TAG, "setBoardValues: " + Arrays.deepToString(ticTacToeAI.getBoardValues()));
     }
 
     private void evaluateBoard() {
@@ -190,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 view.setTag(EMPTY);
             }
         }
+        ticTacToeAI.resetBoard();
         turnImage.setImageResource(R.drawable.ic_dot);
         turn = 0;
         player1Turn = true;
