@@ -2,7 +2,6 @@ package com.caballero.tictactoe;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,15 +10,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.caballero.tictactoe.ai.RandomTicTacToeAI;
+import com.caballero.tictactoe.statemachine.TicTacToeMachine;
+import com.caballero.tictactoe.util.CustomDialog;
 
-import java.util.Arrays;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class TicTacToeActivity extends AppCompatActivity implements View.OnClickListener, CustomDialog.OnClickListener{
 
     public static final int COLS = 3;
     public static final int ROWS = 3;
-    public static final String EMPTY = "empty";
+    public static final String EMPTY_VALUE = "empty";
     public static final String PLAYER1_TURN = "com.caballero.tictactoe.player1.turn";
     public static final String TURN = "com.caballero.tictactoe.turn.key";
     public static final String TURN_IMG = "com.caballero.tictactoe.turn.image";
@@ -29,17 +27,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String BOARD_VALUES2 = "com.caballero.tictactoe.board.values2";
     public static final String BOARD_VALUES3 = "com.caballero.tictactoe.board.values3";
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "TicTacToeActivity";
 
-    private ImageView[][] imageViews = new ImageView[3][3];
-    private String[][] boardValues = new String[3][3];
-    private ImageView turnImage, player1Img, player2Img;
-    private TextView player1Text, player2Text;
+    private ImageView[][] imageViews = new ImageView[ROWS][COLS];
+    private String[][] boardValues = new String[ROWS][COLS];
+    private ImageView turnImage;
+    private ImageView player1Img;
+    private ImageView player2Img;
+    private TextView player1Text;
+    private TextView player2Text;
     private Button resetButton;
 
-
-    private RandomTicTacToeAI ticTacToeAI;
-    private Handler handlerAI;
+    private TicTacToeMachine machine;
 
     private boolean player1Turn;
     private boolean endGame;
@@ -53,18 +52,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initViews();
-        handlerAI = new Handler();
+        machine = new TicTacToeMachine(this);
+        machine.startMachine();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        setViewClickListeners();
+    }
 
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -98,25 +98,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        machine.makeMove(v);
+    }
 
-        if (isLegalMove(v)) {
-            if (player1Turn) {
-                ((ImageView) v).setImageResource(R.drawable.ic_dot);
-                v.setTag(R.drawable.ic_dot);
-                turnImage.setImageResource(R.drawable.ic_x);
+    @Override
+    public void noClicked() {
+        resetGame();
+    }
 
-                turn++;
-                evaluateBoard();
-                player1Turn = !player1Turn;
-                setBoardValues();
-
-            }
-//            else {
-//                ((ImageView) v).setImageResource(R.drawable.ic_x);
-//                v.setTag(R.drawable.ic_x);
-//                turnImage.setImageResource(R.drawable.ic_dot);
-//            }
-        }
+    @Override
+    public void yesClicked() {
+        resetBoard();
     }
 
     private void initViews() {
@@ -132,9 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String imageId = "button_" + row + col;
                 int resId = getResources().getIdentifier(imageId, "id", getPackageName());
 
-                boardValues[row][col] = EMPTY;
+                boardValues[row][col] = EMPTY_VALUE;
                 imageViews[row][col] = findViewById(resId);
-                imageViews[row][col].setOnClickListener(this);
             }
         }
 
@@ -149,29 +140,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateScores();
     }
 
-    private int getTurnImage(boolean playerTurn) {
-        if (playerTurn) {
-            return R.drawable.ic_dot;
-        }
-        return R.drawable.ic_x;
-    }
-
-    private void restoreBoardValues() {
+    private void setViewClickListeners() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                String stringId = boardValues[row][col];
-                imageViews[row][col].setTag(stringId);
-                if (!stringId.equals(EMPTY)) {
-                    int resId = Integer.parseInt(stringId);
-                    imageViews[row][col].setImageResource(resId);
-                } else {
-                    imageViews[row][col].setImageResource(R.drawable.ic_placeholder);
-                }
+                imageViews[row][col].setOnClickListener(this);
             }
         }
     }
 
-    private void setBoardValues() {
+    public void setBoardValues() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 String tag = imageViews[row][col].getTag().toString();
@@ -180,62 +157,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void evaluateBoard() {
-        if (evaluateForWin()) {
-            if (player1Turn) {
-                player1Wins();
-            } else {
-                player2Wins();
-            }
-        } else if (turn >= 9) {
-            draw();
+    private int getTurnImage(boolean playerTurn) {
+        if (playerTurn) {
+            return R.drawable.ic_dot;
         }
-
+        return R.drawable.ic_x;
     }
 
-    private boolean isLegalMove(View view) {
-        return view.getTag().toString().equals(EMPTY);
+    public boolean isPlayer1Turn() {
+        return player1Turn;
     }
 
-    private void resetGame() {
-        resetBoard();
-        player1Score = 0;
-        player2Score = 0;
-        updateScores();
+    public void setPlayer1Turn(boolean player1Turn) {
+        this.player1Turn = player1Turn;
     }
 
-    private void resetBoard() {
-        for (ImageView[] views : imageViews) {
-            for (ImageView view : views) {
-                view.setImageResource(R.drawable.ic_placeholder);
-                view.setTag(EMPTY);
-            }
-        }
-        turnImage.setImageResource(R.drawable.ic_dot);
-        turn = 0;
-        player1Turn = true;
-        endGame = false;
+    public int getTurn() {
+        return turn;
     }
 
-    private void updateScores() {
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
+
+    public void updateScores() {
         player1Text.setText(String.valueOf(player1Score));
         player2Text.setText(String.valueOf(player2Score));
     }
 
-    private void draw() {
-        gameOver("Draw");
+    public void updateUI(View view) {
+        int tileImg = R.drawable.ic_x;
+        int turnImg = R.drawable.ic_dot;
+        if (player1Turn) {
+            tileImg = R.drawable.ic_dot;
+            turnImg = R.drawable.ic_x;
+        }
+        ((ImageView) view).setImageResource(tileImg);
+        view.setTag(tileImg);
+        turnImage.setImageResource(turnImg);
+    }
+
+    public boolean isLegalMove(View view) {
+        return view.getTag().toString().equals(EMPTY_VALUE);
+    }
+
+    public int evaluateBoard() {
+        if (evaluateForWin()) {
+            if (player1Turn) {
+                player1Wins();
+                return 1;
+            } else {
+                player2Wins();
+                return 2;
+            }
+        } else if (turn >= 9) {
+            return 0;
+        }
+        return -1;
     }
 
     private void player1Wins() {
         player1Score++;
         updateScores();
-        gameOver("Player 1 wins!!");
     }
 
     private void player2Wins() {
         player2Score++;
         updateScores();
-        gameOver("Player 2 wins!!");
     }
 
     private boolean evaluateForWin() {
@@ -250,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < 3; i++) {
             if (field[i][0].equals(field[i][1])
                     && field[i][0].equals(field[i][2])
-                    && !field[i][0].equals(EMPTY)) {
+                    && !field[i][0].equals(EMPTY_VALUE)) {
                 return true;
             }
         }
@@ -258,43 +246,85 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < 3; i++) {
             if (field[0][i].equals(field[1][i])
                     && field[0][i].equals(field[2][i])
-                    && !field[0][i].equals(EMPTY)) {
+                    && !field[0][i].equals(EMPTY_VALUE)) {
                 return true;
             }
         }
         //diagonal
         if (field[0][0].equals(field[1][1])
                 && field[0][0].equals(field[2][2])
-                && !field[0][0].equals(EMPTY)) {
+                && !field[0][0].equals(EMPTY_VALUE)) {
             return true;
         }
         //diagonal
         if (field[0][2].equals(field[1][1])
                 && field[0][2].equals(field[2][0])
-                && !field[0][2].equals(EMPTY)) {
+                && !field[0][2].equals(EMPTY_VALUE)) {
             return true;
         }
         return false;
     }
 
-    private void gameOver(String winMsg) {
+    public void gameOver(int winner) {
+        String winMsg = "";
+        if (winner == 0) {
+            winMsg = "Draw";
+        } else if (winner == 1) {
+            winMsg = "Player 1 wins!!";
+        } else if (winner == 2) {
+            winMsg = "Player 2 wins!!";
+        }
         endGame = true;
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Game Over");
-        dialog.setMessage(winMsg + "\nPlay again?");
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                resetBoard();
-            }
-        });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                resetGame();
-            }
-        });
-        dialog.create().show();
+        Bundle bundle = new Bundle();
+        bundle.putString(CustomDialog.DIALOG_TITLE, "Game Over");
+        bundle.putString(CustomDialog.DIALOG_MESSAGE, winMsg + "\nPlay again?");
+        CustomDialog customDialog = new CustomDialog();
+        customDialog.setArguments(bundle);
+        customDialog.setCancelable(false);
+        customDialog.show(getSupportFragmentManager(), "custom dialog");
     }
 
+    private void resetBoard() {
+        Log.d(TAG, "resetBoard: ");
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                boardValues[row][col] = EMPTY_VALUE;
+                imageViews[row][col].setImageResource(R.drawable.ic_placeholder);
+                imageViews[row][col].setTag(EMPTY_VALUE);
+            }
+        }
+        turnImage.setImageResource(R.drawable.ic_dot);
+        turn = 0;
+        player1Turn = true;
+        endGame = false;
+        machine.setTicTacToeState(machine.getIdleState());
+    }
+
+    private void resetGame() {
+        resetBoard();
+        player1Score = 0;
+        player2Score = 0;
+        updateScores();
+    }
+
+    public ImageView[][] getImageViews() {
+        return imageViews;
+    }
+
+    private void restoreBoardValues() {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                String stringId = boardValues[row][col];
+                imageViews[row][col].setTag(stringId);
+                if (!stringId.equals(EMPTY_VALUE)) {
+                    int resId = Integer.parseInt(stringId);
+                    imageViews[row][col].setImageResource(resId);
+                } else {
+                    imageViews[row][col].setImageResource(R.drawable.ic_placeholder);
+                }
+            }
+        }
+    }
+    // TODO: 8/18/2019 potential bug: keep game over state after orientation change 
+    // TODO: 8/16/2019 AI 
 }
