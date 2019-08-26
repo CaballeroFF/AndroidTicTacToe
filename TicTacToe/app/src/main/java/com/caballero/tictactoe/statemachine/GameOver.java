@@ -17,7 +17,7 @@ public class GameOver implements TicTacToeState {
 
     @Override
     public void idle() {
-        Log.d(TAG, "idle: ");
+        Log.d(TAG, "idle: game over");
     }
 
     @Override

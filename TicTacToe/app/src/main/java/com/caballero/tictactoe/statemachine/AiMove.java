@@ -26,20 +26,18 @@ public class AiMove implements TicTacToeState {
     @Override
     public void makeMove(View view) {
         Log.d(TAG, "makeMove: player 2 move");
-        ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
-        ticTacToeMachine.evaluateMove(view);
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                TicTacToeActivity activity = ticTacToeMachine.getWeakReference().get();
-//                Log.d(TAG, "makeMove: AI move");
-//                ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
-//                int row = new Random().nextInt(3);
-//                int col = new Random().nextInt(3);
-//                ticTacToeMachine.evaluateMove(activity.getImageViews()[row][col]);
-//            }
-//        }, new Random().nextInt(2000));
+//        ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
+//        ticTacToeMachine.evaluateMove(view);
+        // TODO: 8/25/2019 make 2 player game 
+        final View v = view;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
+                ticTacToeMachine.evaluateMove(v);
+            }
+        }, 500);
     }
 
     @Override

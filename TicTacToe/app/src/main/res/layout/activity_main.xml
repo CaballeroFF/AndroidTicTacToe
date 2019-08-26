@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context=".MainActivity">
+    tools:context=".TicTacToeActivity">
 
     <GridLayout
         android:id="@+id/game_board"
@@ -130,16 +130,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_placeholder"
         android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_placeholder"
         tools:src="@drawable/ic_x" />
 
     <TextView
         android:id="@+id/player2_literal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/player2_image"
         android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/player2_image"
         android:text="Player 2: "
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -156,11 +156,11 @@
         android:id="@+id/player1_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_above="@+id/player2_image"
-        android:src="@drawable/ic_placeholder"
+        android:layout_alignParentStart="true"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_placeholder"
         tools:src="@drawable/ic_dot" />
 
     <TextView
@@ -168,8 +168,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/player2_literal"
-        android:layout_toEndOf="@+id/player1_image"
         android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@+id/player1_image"
         android:text="Player 1: "
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -210,5 +210,11 @@
         android:layout_centerHorizontal="true"
         android:text="Turn:"
         android:textColor="@android:color/black" />
+
+    <com.caballero.tictactoe.util.LineView
+        android:id="@+id/win_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/score_literal" />
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.caballero.tictactoe;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.CustomDialog;
+import com.caballero.tictactoe.util.LineView;
 
 public class TicTacToeActivity extends AppCompatActivity implements View.OnClickListener, CustomDialog.OnClickListener{
 
@@ -29,6 +31,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private static final String TAG = "TicTacToeActivity";
 
+    private LineView winLine;
     private ImageView[][] imageViews = new ImageView[ROWS][COLS];
     private String[][] boardValues = new String[ROWS][COLS];
     private ImageView turnImage;
@@ -40,8 +43,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private TicTacToeMachine machine;
 
+    private String winType = LineView.EMPTY;
+
     private boolean player1Turn;
     private boolean endGame;
+    private boolean resetToggle;
     private int player1Score;
     private int player2Score;
     private int turn;
@@ -65,6 +71,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStop() {
         super.onStop();
+        winLine.setDrawingFinishedListener(null);
     }
 
     @Override
@@ -118,6 +125,9 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         turnImage = findViewById(R.id.turn_image);
         player1Img = findViewById(R.id.player1_image);
         player2Img = findViewById(R.id.player2_image);
+        winLine = findViewById(R.id.win_line);
+//        winLine.setStrokeWidth(40f);
+        winLine.setStrokeWidth(20f);
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
@@ -146,6 +156,30 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                 imageViews[row][col].setOnClickListener(this);
             }
         }
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!resetToggle) {
+                    winLine.setLine(LineView.RIGHT_COLUMN);
+                    winLine.draw();
+                    resetToggle = true;
+                } else {
+                    winLine.clearLine();
+                    resetToggle = false;
+                }
+            }
+        });
+    }
+
+    private void drawWinLine(String type) {
+        winLine.setLine(type);
+        winLine.draw();
+    }
+
+    private void clearWinLine() {
+        winType = LineView.EMPTY;
+        winLine.setDrawingFinishedListener(null);
+        winLine.clearLine();
     }
 
     public void setBoardValues() {
@@ -226,6 +260,40 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         updateScores();
     }
 
+    private void setRowWinType(int row) {
+        switch (row) {
+            case 0:
+                winType = LineView.TOP_ROW;
+                break;
+            case 1:
+                winType = LineView.MIDDLE_ROW;
+                break;
+            case 2:
+                winType = LineView.BOTTOM_ROW;
+                break;
+            default:
+                winType = LineView.EMPTY;
+                break;
+        }
+    }
+
+    private void setColumnWinType(int col) {
+        switch (col) {
+            case 0:
+                winType = LineView.LEFT_COLUMN;
+                break;
+            case 1:
+                winType = LineView.MIDDLE_COLUMN;
+                break;
+            case 2:
+                winType = LineView.RIGHT_COLUMN;
+                break;
+            default:
+                winType = LineView.EMPTY;
+                break;
+        }
+    }
+
     private boolean evaluateForWin() {
         String[][] field = new String[3][3];
 
@@ -239,6 +307,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             if (field[i][0].equals(field[i][1])
                     && field[i][0].equals(field[i][2])
                     && !field[i][0].equals(EMPTY_VALUE)) {
+                setRowWinType(i);
                 return true;
             }
         }
@@ -247,6 +316,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             if (field[0][i].equals(field[1][i])
                     && field[0][i].equals(field[2][i])
                     && !field[0][i].equals(EMPTY_VALUE)) {
+                setColumnWinType(i);
                 return true;
             }
         }
@@ -254,34 +324,43 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         if (field[0][0].equals(field[1][1])
                 && field[0][0].equals(field[2][2])
                 && !field[0][0].equals(EMPTY_VALUE)) {
+            winType = LineView.TOP_LEFT_DIAGONAL;
             return true;
         }
         //diagonal
         if (field[0][2].equals(field[1][1])
                 && field[0][2].equals(field[2][0])
                 && !field[0][2].equals(EMPTY_VALUE)) {
+            winType = LineView.TOP_RIGHT_DIAGONAL;
             return true;
         }
         return false;
     }
 
-    public void gameOver(int winner) {
-        String winMsg = "";
-        if (winner == 0) {
-            winMsg = "Draw";
-        } else if (winner == 1) {
-            winMsg = "Player 1 wins!!";
-        } else if (winner == 2) {
-            winMsg = "Player 2 wins!!";
-        }
+    public void gameOver(final int winner) {
         endGame = true;
-        Bundle bundle = new Bundle();
-        bundle.putString(CustomDialog.DIALOG_TITLE, "Game Over");
-        bundle.putString(CustomDialog.DIALOG_MESSAGE, winMsg + "\nPlay again?");
-        CustomDialog customDialog = new CustomDialog();
-        customDialog.setArguments(bundle);
-        customDialog.setCancelable(false);
-        customDialog.show(getSupportFragmentManager(), "custom dialog");
+        drawWinLine(winType);
+        winLine.setDrawingFinishedListener(new LineView.DrawingFinishedListener() {
+            @Override
+            public void finishedDrawing() {
+                Log.d(TAG, "finishedDrawing: ");
+                String winMsg = "";
+                if (winner == 0) {
+                    winMsg = "Draw";
+                } else if (winner == 1) {
+                    winMsg = "Player 1 wins!!";
+                } else if (winner == 2) {
+                    winMsg = "Player 2 wins!!";
+                }
+                Bundle bundle = new Bundle();
+                bundle.putString(CustomDialog.DIALOG_TITLE, "Game Over");
+                bundle.putString(CustomDialog.DIALOG_MESSAGE, winMsg + "\nPlay again?");
+                CustomDialog customDialog = new CustomDialog();
+                customDialog.setArguments(bundle);
+                customDialog.setCancelable(false);
+                customDialog.show(getSupportFragmentManager(), "custom dialog");
+            }
+        });
     }
 
     private void resetBoard() {
@@ -293,6 +372,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                 imageViews[row][col].setTag(EMPTY_VALUE);
             }
         }
+        clearWinLine();
         turnImage.setImageResource(R.drawable.ic_dot);
         turn = 0;
         player1Turn = true;
@@ -325,6 +405,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         }
     }
-    // TODO: 8/18/2019 potential bug: keep game over state after orientation change 
+    // TODO: 8/18/2019 potential bug: keep game over state after orientation change
     // TODO: 8/16/2019 AI 
 }

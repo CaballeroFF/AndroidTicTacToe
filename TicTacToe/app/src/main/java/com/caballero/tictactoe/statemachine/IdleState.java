@@ -3,11 +3,15 @@ package com.caballero.tictactoe.statemachine;
 import android.util.Log;
 import android.view.View;
 
+import com.caballero.tictactoe.TicTacToeActivity;
+import com.caballero.tictactoe.ai.RandomTicTacToeAI;
+
 public class IdleState implements TicTacToeState {
 
     private static final String TAG = "statemachine";
 
-    TicTacToeMachine ticTacToeMachine;
+    private TicTacToeMachine ticTacToeMachine;
+    private RandomTicTacToeAI ai = new RandomTicTacToeAI();
 
     public IdleState(TicTacToeMachine ticTacToeMachine) {
         this.ticTacToeMachine = ticTacToeMachine;
@@ -16,6 +20,12 @@ public class IdleState implements TicTacToeState {
     @Override
     public void idle() {
         Log.d(TAG, "idle: ");
+        if (!ticTacToeMachine.isPlayerTurn()) {
+            TicTacToeActivity activity = ticTacToeMachine.getWeakReference().get();
+            View view = activity.getImageViews()[ai.getRow()][ai.getCol()];
+            makeMove(view);
+        }
+        // TODO: 8/25/2019 make 2 player 
     }
 
     @Override

@@ -1,42 +1,23 @@
 package com.caballero.tictactoe.ai;
 
-import android.util.Log;
 import android.widget.ImageView;
 
-import java.util.Arrays;
 import java.util.Random;
 
-public class RandomTicTacToeAI extends TicTacToeAI {
+public class RandomTicTacToeAI {
 
     private static final String TAG = "RandomTicTacToeAI";
-    
-    RandomTicTacToeAI(String[][] boardValues, ImageView[][] imageViews) {
-        super(boardValues, imageViews);
+    public static final int MIN = 0;
+    public static final int MAX = 3;
+
+    public RandomTicTacToeAI() {
     }
 
-    @Override
-    ImageView makeMove() {
-        final String[][] validMoves = getValidMoves();
-        int row = getRow();
-        int col = getCol();
-        Log.d(TAG, "makeMove: row: " + row + " col: " + col);
-        Log.d(TAG, "makeMove: " + Arrays.deepToString(validMoves));
-        Log.d(TAG, "makeMove: " + !validMoves[row][col].equals(VALID));
-        while (!validMoves[row][col].equals(VALID)) {
-            row = getRow();
-            col = getCol();
-            Log.d(TAG, "makeMove: row: " + row + " col: " + col);
-            Log.d(TAG, "makeMove: " + Arrays.deepToString(validMoves));
-            Log.d(TAG, "makeMove: " + !validMoves[row][col].equals(VALID));
-        }
-        return getImageViews()[row][col];
+    public int getRow() {
+        return new Random().nextInt(MAX - MIN) + MIN;
     }
 
-    private int getRow() {
-        return new Random().nextInt((getMaxExc() - getMinInc())) + getMinInc();
-    }
-
-    private int getCol() {
-        return new Random().nextInt((getMaxExc() - getMinInc())) + getMinInc();
+    public int getCol() {
+        return new Random().nextInt(MAX - MIN) + MIN;
     }
 }

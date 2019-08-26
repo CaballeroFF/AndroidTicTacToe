@@ -45,6 +45,7 @@ public class IsGameOver implements TicTacToeState {
         }
         ticTacToeMachine.setPlayerTurn(!ticTacToeMachine.isPlayerTurn());
         activity.setBoardValues();
+        ticTacToeMachine.idleState();
     }
 
     @Override

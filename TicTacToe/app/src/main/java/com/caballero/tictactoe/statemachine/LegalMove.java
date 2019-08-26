@@ -36,6 +36,7 @@ public class LegalMove implements TicTacToeState {
         } else {
             Log.d(TAG, "evaluateMove: illegal move, try again.");
             ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getIdleState());
+            ticTacToeMachine.idleState();
         }
     }
 
