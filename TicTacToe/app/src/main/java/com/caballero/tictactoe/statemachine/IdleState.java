@@ -20,7 +20,7 @@ public class IdleState implements TicTacToeState {
     @Override
     public void idle() {
         Log.d(TAG, "idle: ");
-        if (!ticTacToeMachine.isPlayerTurn()) {
+        if (ticTacToeMachine.isSinglePlayer() && !ticTacToeMachine.isPlayerTurn()) {
             TicTacToeActivity activity = ticTacToeMachine.getWeakReference().get();
             View view = activity.getImageViews()[ai.getRow()][ai.getCol()];
             makeMove(view);

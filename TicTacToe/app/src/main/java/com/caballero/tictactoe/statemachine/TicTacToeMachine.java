@@ -48,6 +48,11 @@ public class TicTacToeMachine {
         idleState();
     }
 
+    public boolean isSinglePlayer() {
+        TicTacToeActivity activity = weakReference.get();
+        return activity.isSinglePlayer();
+    }
+
     public int getTurn() {
         TicTacToeActivity activity = weakReference.get();
         return activity.getTurn();

@@ -1,9 +1,7 @@
 package com.caballero.tictactoe;
 
-import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +13,7 @@ import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
 
-public class TicTacToeActivity extends AppCompatActivity implements View.OnClickListener, CustomDialog.OnClickListener{
+public class TicTacToeActivity extends AppCompatActivity implements View.OnClickListener, CustomDialog.OnClickListener {
 
     public static final int COLS = 3;
     public static final int ROWS = 3;
@@ -45,6 +43,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private String winType = LineView.EMPTY;
 
+    private boolean singlePlayer;
     private boolean player1Turn;
     private boolean endGame;
     private boolean resetToggle;
@@ -55,11 +54,15 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.game_activity);
 
-        initViews();
         machine = new TicTacToeMachine(this);
         machine.startMachine();
+
+        Intent intent = getIntent();
+        singlePlayer = intent.getBooleanExtra(MainActivity.PLAYER_EXTRA, false);
+
+        initViews();
     }
 
     @Override
@@ -196,6 +199,10 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             return R.drawable.ic_dot;
         }
         return R.drawable.ic_x;
+    }
+
+    public boolean isSinglePlayer() {
+        return singlePlayer;
     }
 
     public boolean isPlayer1Turn() {
@@ -407,4 +414,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
     // TODO: 8/18/2019 potential bug: keep game over state after orientation change
     // TODO: 8/16/2019 AI 
+    // TODO: 8/30/2019 add single player status text  
+    // TODO: 8/30/2019 add difficulty status text 
+    // TODO: 8/30/2019 player image select 
 }
