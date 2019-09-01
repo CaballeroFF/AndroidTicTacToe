@@ -3,4 +3,6 @@
     <string name="main_title">TicTacToe</string>
     <string name="players_list">Players:</string>
     <string name="difficulty_list">Difficulty:</string>
+    <string name="player_1">Player 1:</string>
+    <string name="player_2">Player 2:</string>
 </resources>

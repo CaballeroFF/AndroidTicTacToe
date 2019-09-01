@@ -4,10 +4,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
-import com.caballero.tictactoe.TicTacToeActivity;
-
-import java.util.Random;
-
 public class AiMove implements TicTacToeState {
 
     private static final String TAG = "statemachine";
