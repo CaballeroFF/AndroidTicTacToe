@@ -27,6 +27,12 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
         return spinnerImages.length;
     }
 
+    @Nullable
+    @Override
+    public String getItem(int position) {
+        return String.valueOf(spinnerImages[position]);
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

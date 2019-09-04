@@ -25,7 +25,6 @@ public class IdleState implements TicTacToeState {
             View view = activity.getImageViews()[ai.getRow()][ai.getCol()];
             makeMove(view);
         }
-        // TODO: 8/25/2019 make 2 player 
     }
 
     @Override

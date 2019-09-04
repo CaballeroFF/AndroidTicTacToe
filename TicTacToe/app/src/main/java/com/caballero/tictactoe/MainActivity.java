@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
         spinnerPlayerImage.setAdapter(spinnerAdapter);
         spinnerPlayerImage.setSelection(0);
 
-        spinnerPlayerTwoImage.setAdapter(spinnerAdapter);
+        SpinnerAdapter spinnerAdapterTwo = new SpinnerAdapter(this, PLAYER_IMAGES);
+        spinnerPlayerTwoImage.setAdapter(spinnerAdapterTwo);
         spinnerPlayerTwoImage.setSelection(1);
 
         ArrayAdapter<String> adapterPlayer = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PLAYERS);
@@ -122,11 +123,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame() {
+        int playerOneImg = Integer.parseInt(spinnerPlayerImage.getSelectedItem().toString());
+        int playerTwoImg = Integer.parseInt(spinnerPlayerTwoImage.getSelectedItem().toString());
+        String difficulty = spinnerDifficulty.getSelectedItem().toString();
+        if (MainActivity.EMPTY_SELECTION.equals(difficulty)) {
+            difficulty = MainActivity.EASY_DIFFICULTY;
+        }
         Intent intentStartGame = new Intent(MainActivity.this, TicTacToeActivity.class);
-        intentStartGame.putExtra(PLAYER_ONE_EXTRA, String.valueOf(spinnerPlayerImage.getSelectedItem()));
-        intentStartGame.putExtra(PLAYER_TWO_EXTRA, String.valueOf(spinnerPlayerTwoImage.getSelectedItem()));
+        intentStartGame.putExtra(PLAYER_ONE_EXTRA,  playerOneImg);
+        intentStartGame.putExtra(PLAYER_TWO_EXTRA, playerTwoImg);
         intentStartGame.putExtra(PLAYER_EXTRA, isSinglePlayer);
-        intentStartGame.putExtra(DIFFICULTY_EXTRA, spinnerDifficulty.getSelectedItem().toString());
+        intentStartGame.putExtra(DIFFICULTY_EXTRA, difficulty);
         startActivity(intentStartGame);
     }
 

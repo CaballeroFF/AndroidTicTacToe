@@ -37,11 +37,14 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private ImageView player2Img;
     private TextView player1Text;
     private TextView player2Text;
+    private TextView playerStatus;
+    private TextView difficultyStatus;
     private Button resetButton;
 
     private TicTacToeMachine machine;
 
     private String winType = LineView.EMPTY;
+    private String difficulty;
 
     private boolean singlePlayer;
     private boolean player1Turn;
@@ -49,6 +52,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private boolean resetToggle;
     private int player1Score;
     private int player2Score;
+    private int playerOneImgRes;
+    private int playerTwoImgRes;
     private int turn;
 
     @Override
@@ -61,6 +66,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
         Intent intent = getIntent();
         singlePlayer = intent.getBooleanExtra(MainActivity.PLAYER_EXTRA, false);
+        playerOneImgRes = intent.getIntExtra(MainActivity.PLAYER_ONE_EXTRA, R.drawable.ic_dot);
+        playerTwoImgRes = intent.getIntExtra(MainActivity.PLAYER_TWO_EXTRA, R.drawable.ic_x);
+        difficulty = intent.getStringExtra(MainActivity.DIFFICULTY_EXTRA);
+
+        Log.d(TAG, "onCreate: " + (playerOneImgRes == R.drawable.ic_dot));
 
         initViews();
     }
@@ -122,6 +132,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initViews() {
+        playerStatus = findViewById(R.id.single_player_status);
+        difficultyStatus = findViewById(R.id.difficulty_status);
         player1Text = findViewById(R.id.player1);
         player2Text = findViewById(R.id.player2);
         resetButton = findViewById(R.id.reset_button);
@@ -142,14 +154,15 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-        player1Img.setImageResource(R.drawable.ic_dot);
-        player2Img.setImageResource(R.drawable.ic_x);
-        turnImage.setImageResource(R.drawable.ic_dot);
+        player1Img.setImageResource(playerOneImgRes);
+        player2Img.setImageResource(playerTwoImgRes);
+        turnImage.setImageResource(playerOneImgRes);
         player1Turn = true;
         turn = 0;
         player1Score = 0;
         player2Score = 0;
 
+        updatePlayerStatus();
         updateScores();
     }
 
@@ -196,9 +209,9 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private int getTurnImage(boolean playerTurn) {
         if (playerTurn) {
-            return R.drawable.ic_dot;
+            return playerOneImgRes;
         }
-        return R.drawable.ic_x;
+        return playerTwoImgRes;
     }
 
     public boolean isSinglePlayer() {
@@ -221,17 +234,28 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         this.turn = turn;
     }
 
+    private void updatePlayerStatus() {
+        String playerStatusString = "Two Players";
+        difficultyStatus.setVisibility(View.INVISIBLE);
+        if (singlePlayer) {
+            playerStatusString = "Single Player";
+            difficultyStatus.setText(difficulty);
+            difficultyStatus.setVisibility(View.VISIBLE);
+        }
+        playerStatus.setText(playerStatusString);
+    }
+
     public void updateScores() {
         player1Text.setText(String.valueOf(player1Score));
         player2Text.setText(String.valueOf(player2Score));
     }
 
     public void updateUI(View view) {
-        int tileImg = R.drawable.ic_x;
-        int turnImg = R.drawable.ic_dot;
+        int tileImg = playerTwoImgRes;
+        int turnImg = playerOneImgRes;
         if (player1Turn) {
-            tileImg = R.drawable.ic_dot;
-            turnImg = R.drawable.ic_x;
+            tileImg = playerOneImgRes;
+            turnImg = playerTwoImgRes;
         }
         ((ImageView) view).setImageResource(tileImg);
         view.setTag(tileImg);
@@ -350,7 +374,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         winLine.setDrawingFinishedListener(new LineView.DrawingFinishedListener() {
             @Override
             public void finishedDrawing() {
-                Log.d(TAG, "finishedDrawing: ");
                 String winMsg = "";
                 if (winner == 0) {
                     winMsg = "Draw";
@@ -371,7 +394,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void resetBoard() {
-        Log.d(TAG, "resetBoard: ");
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 boardValues[row][col] = EMPTY_VALUE;
@@ -380,7 +402,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         }
         clearWinLine();
-        turnImage.setImageResource(R.drawable.ic_dot);
+        turnImage.setImageResource(playerOneImgRes);
         turn = 0;
         player1Turn = true;
         endGame = false;
@@ -413,8 +435,5 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         }
     }
     // TODO: 8/18/2019 potential bug: keep game over state after orientation change
-    // TODO: 8/16/2019 AI 
-    // TODO: 8/30/2019 add single player status text  
-    // TODO: 8/30/2019 add difficulty status text 
-    // TODO: 8/30/2019 player image select 
+    // TODO: 8/16/2019 AI
 }

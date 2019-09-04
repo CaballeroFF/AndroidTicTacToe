@@ -25,7 +25,6 @@ public class AiMove implements TicTacToeState {
 //        ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
 //        ticTacToeMachine.evaluateMove(view);
         long delay = ticTacToeMachine.isSinglePlayer() ? 500 : 0;
-        // TODO: 8/25/2019 make 2 player game 
         final View v = view;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
