@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caballero.tictactoe.ai.RandomTicTacToeAI;
+import com.caballero.tictactoe.ai.TicTacToeAi;
 import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
@@ -42,6 +44,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private Button resetButton;
 
     private TicTacToeMachine machine;
+    private TicTacToeAi ai;
 
     private String winType = LineView.EMPTY;
     private String difficulty;
@@ -63,6 +66,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
         machine = new TicTacToeMachine(this);
         machine.startMachine();
+
+        ai = new RandomTicTacToeAI();
 
         Intent intent = getIntent();
         singlePlayer = intent.getBooleanExtra(MainActivity.PLAYER_EXTRA, false);
@@ -123,7 +128,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void noClicked() {
-        resetGame();
+        //resetGame();
+        finish();
     }
 
     @Override
@@ -141,7 +147,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         player1Img = findViewById(R.id.player1_image);
         player2Img = findViewById(R.id.player2_image);
         winLine = findViewById(R.id.win_line);
-//        winLine.setStrokeWidth(40f);
         winLine.setStrokeWidth(20f);
 
         for (int row = 0; row < ROWS; row++) {
@@ -183,6 +188,13 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                     winLine.clearLine();
                     resetToggle = false;
                 }
+            }
+        });
+
+        ai.setOnMoveMadeListener(new RandomTicTacToeAI.OnMoveListener() {
+            @Override
+            public void moveResults(int row, int col) {
+                machine.makeMove(imageViews[row][col]);
             }
         });
     }
@@ -416,10 +428,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         updateScores();
     }
 
-    public ImageView[][] getImageViews() {
-        return imageViews;
-    }
-
     private void restoreBoardValues() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
@@ -434,6 +442,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         }
     }
+
+    public void aiMakeMove() {
+        ai.makeMove();
+    }
     // TODO: 8/18/2019 potential bug: keep game over state after orientation change
     // TODO: 8/16/2019 AI
+    // TODO: 9/5/2019 make boardValues live data
 }

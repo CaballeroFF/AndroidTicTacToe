@@ -4,14 +4,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.caballero.tictactoe.TicTacToeActivity;
-import com.caballero.tictactoe.ai.RandomTicTacToeAI;
 
 public class IdleState implements TicTacToeState {
 
     private static final String TAG = "statemachine";
 
     private TicTacToeMachine ticTacToeMachine;
-    private RandomTicTacToeAI ai = new RandomTicTacToeAI();
 
     public IdleState(TicTacToeMachine ticTacToeMachine) {
         this.ticTacToeMachine = ticTacToeMachine;
@@ -22,8 +20,7 @@ public class IdleState implements TicTacToeState {
         Log.d(TAG, "idle: ");
         if (ticTacToeMachine.isSinglePlayer() && !ticTacToeMachine.isPlayerTurn()) {
             TicTacToeActivity activity = ticTacToeMachine.getWeakReference().get();
-            View view = activity.getImageViews()[ai.getRow()][ai.getCol()];
-            makeMove(view);
+            activity.aiMakeMove();
         }
     }
 
