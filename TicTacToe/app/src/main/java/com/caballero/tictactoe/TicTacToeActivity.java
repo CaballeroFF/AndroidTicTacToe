@@ -9,8 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caballero.tictactoe.ai.HardTicTacToeAi;
+import com.caballero.tictactoe.ai.MediumTicTacToeAi;
 import com.caballero.tictactoe.ai.RandomTicTacToeAI;
 import com.caballero.tictactoe.ai.TicTacToeAi;
+import com.caballero.tictactoe.components.GameBoard;
+import com.caballero.tictactoe.components.Position;
 import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
@@ -28,6 +32,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     public static final String BOARD_VALUES1 = "com.caballero.tictactoe.board.values1";
     public static final String BOARD_VALUES2 = "com.caballero.tictactoe.board.values2";
     public static final String BOARD_VALUES3 = "com.caballero.tictactoe.board.values3";
+    public static final String GAME_BOARD = "com.caballero.tictactoe.tictactoeactivity.game.board";
 
     private static final String TAG = "TicTacToeActivity";
 
@@ -45,6 +50,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private TicTacToeMachine machine;
     private TicTacToeAi ai;
+    private GameBoard gameBoard;
 
     private String winType = LineView.EMPTY;
     private String difficulty;
@@ -67,13 +73,14 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         machine = new TicTacToeMachine(this);
         machine.startMachine();
 
-        ai = new RandomTicTacToeAI();
-
         Intent intent = getIntent();
         singlePlayer = intent.getBooleanExtra(MainActivity.PLAYER_EXTRA, false);
         playerOneImgRes = intent.getIntExtra(MainActivity.PLAYER_ONE_EXTRA, R.drawable.ic_dot);
         playerTwoImgRes = intent.getIntExtra(MainActivity.PLAYER_TWO_EXTRA, R.drawable.ic_x);
         difficulty = intent.getStringExtra(MainActivity.DIFFICULTY_EXTRA);
+
+        ai = getAi(playerOneImgRes, playerTwoImgRes, difficulty);
+        gameBoard = new GameBoard();
 
         Log.d(TAG, "onCreate: " + (playerOneImgRes == R.drawable.ic_dot));
 
@@ -103,6 +110,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         outState.putStringArray(BOARD_VALUES1, boardValues[0]);
         outState.putStringArray(BOARD_VALUES2, boardValues[1]);
         outState.putStringArray(BOARD_VALUES3, boardValues[2]);
+        outState.putParcelable(GAME_BOARD, gameBoard);
     }
 
     @Override
@@ -117,6 +125,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         boardValues[1] = savedInstanceState.getStringArray(BOARD_VALUES2);
         boardValues[2] = savedInstanceState.getStringArray(BOARD_VALUES3);
         turnImage.setImageResource(savedInstanceState.getInt(TURN_IMG, R.drawable.ic_dot));
+        gameBoard = savedInstanceState.getParcelable(GAME_BOARD);
         updateScores();
         restoreBoardValues();
     }
@@ -191,10 +200,10 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        ai.setOnMoveMadeListener(new RandomTicTacToeAI.OnMoveListener() {
+        ai.setOnMoveMadeListener(new TicTacToeAi.OnMoveListener() {
             @Override
-            public void moveResults(int row, int col) {
-                machine.makeMove(imageViews[row][col]);
+            public void moveResults(Position position) {
+                machine.makeMove(imageViews[position.getRow()][position.getCol()]);
             }
         });
     }
@@ -269,16 +278,19 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             tileImg = playerOneImgRes;
             turnImg = playerTwoImgRes;
         }
+        gameBoard.makeMove(getViewPosition(view.getId()), tileImg);
         ((ImageView) view).setImageResource(tileImg);
         view.setTag(tileImg);
         turnImage.setImageResource(turnImg);
     }
 
     public boolean isLegalMove(View view) {
+        gameBoard.isMoveLegal(getViewPosition(view.getId()));
         return view.getTag().toString().equals(EMPTY_VALUE);
     }
 
     public int evaluateBoard() {
+        Log.d("GameBoard", "evaluateBoard: " + gameBoard.evaluateForWin());
         if (evaluateForWin()) {
             if (player1Turn) {
                 player1Wins();
@@ -444,9 +456,55 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void aiMakeMove() {
-        ai.makeMove();
+        ai.makeMove(boardValues);
+    }
+
+    private Position getViewPosition(int id) {
+        Position position = new Position(0, 0);
+        switch (id) {
+            case R.id.button_00:
+                position.setPosition(0, 0);
+                break;
+            case R.id.button_01:
+                position.setPosition(0, 1);
+                break;
+            case R.id.button_02:
+                position.setPosition(0, 2);
+                break;
+            case R.id.button_10:
+                position.setPosition(1, 0);
+                break;
+            case R.id.button_11:
+                position.setPosition(1, 1);
+                break;
+            case R.id.button_12:
+                position.setPosition(1, 2);
+                break;
+            case R.id.button_20:
+                position.setPosition(2, 0);
+                break;
+            case R.id.button_21:
+                position.setPosition(2, 1);
+                break;
+            case R.id.button_22:
+                position.setPosition(2, 2);
+                break;
+        }
+        return position;
+    }
+
+    private TicTacToeAi getAi(int playerOne, int playerTwo, String difficulty) {
+        switch (difficulty) {
+            case MainActivity.EASY_DIFFICULTY:
+                return new RandomTicTacToeAI(playerOne, playerTwo);
+            case MainActivity.MEDIUM_DIFFICULTY:
+                return new MediumTicTacToeAi(playerOne, playerTwo);
+            case MainActivity.HARD_DIFFICULTY:
+                return new HardTicTacToeAi(playerOne, playerTwo);
+            default:
+                return new RandomTicTacToeAI(playerOne, playerTwo);
+        }
     }
     // TODO: 8/18/2019 potential bug: keep game over state after orientation change
-    // TODO: 8/16/2019 AI
-    // TODO: 9/5/2019 make boardValues live data
+    // TODO: 9/6/2019 connect game board
 }

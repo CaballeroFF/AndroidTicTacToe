@@ -1,22 +1,35 @@
 package com.caballero.tictactoe.ai;
 
+import com.caballero.tictactoe.components.Position;
+
 public abstract class TicTacToeAi {
 
     private OnMoveListener listener;
 
-    public abstract void makeMove();
+    protected int playerHuman;
+    protected int playerComputer;
 
-    public void moveListenerResult(int row, int col) {
+
+    public TicTacToeAi(int playerHuman, int playerComputer) {
+        this.playerHuman = playerHuman;
+        this.playerComputer = playerComputer;
+    }
+
+    public abstract void makeMove(String[][] board);
+
+    public void moveListenerResult(Position position) {
         if (listener != null) {
-            listener.moveResults(row, col);
+            listener.moveResults(position);
         }
     }
+
+
 
     public void setOnMoveMadeListener(OnMoveListener moveListener) {
         listener = moveListener;
     }
 
     public interface OnMoveListener {
-        void moveResults(int row, int col);
+        void moveResults(Position position);
     }
 }

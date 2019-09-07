@@ -1,231 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context=".TicTacToeActivity">
+    tools:context=".MainActivity">
 
-    <GridLayout
-        android:id="@+id/game_board"
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/main_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/mid_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".75" />
+
+    <TextView
+        android:id="@+id/playerlist_literal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/players_list"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mid_guideline" />
+
+    <Spinner
+        android:id="@+id/main_spinner_players"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/spinner_item_background"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playerlist_literal" />
+
+    <TextView
+        android:id="@+id/main_player1_image_literal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/player_1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/playerlist_literal"
+        app:layout_constraintStart_toStartOf="@+id/main_image_spinner"
+        app:layout_constraintTop_toTopOf="@+id/playerlist_literal" />
+
+    <Spinner
+        android:id="@+id/main_image_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/spinner_item_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/playerlist_literal" />
+
+    <TextView
+        android:id="@+id/difficulty_literal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/difficulty_list"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="@+id/playerlist_literal"
+        app:layout_constraintTop_toBottomOf="@+id/main_spinner_players" />
+
+    <Spinner
+        android:id="@+id/main_spinner_difficulty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/player2_image"
-        android:background="@android:color/black"
-        android:columnCount="3"
-        android:rowCount="3">
-
-        <ImageView
-            android:id="@+id/button_00"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_01"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_02"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_10"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_11"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_12"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_20"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_21"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-        <ImageView
-            android:id="@+id/button_22"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@android:color/white"
-            android:src="@drawable/ic_placeholder"
-            android:tag="empty" />
-
-    </GridLayout>
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/spinner_item_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/difficulty_literal" />
 
     <TextView
-        android:id="@+id/score_literal"
+        android:id="@+id/main_player2_image_literal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/game_board"
-        android:gravity="center"
-        android:text="Score"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="8dp"
+        android:text="@string/player_2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/difficulty_literal"
+        app:layout_constraintStart_toStartOf="@+id/main_image_spinner_player_2"
+        app:layout_constraintTop_toTopOf="@+id/difficulty_literal" />
 
-    <ImageView
-        android:id="@+id/player2_image"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/main_image_spinner_player_2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/player1_literal"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/player2_literal"
-        android:src="@drawable/ic_placeholder"
-        tools:src="@drawable/ic_x" />
-
-    <TextView
-        android:id="@+id/player2_literal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player1_literal"
-        android:layout_toStartOf="@+id/player2"
-        android:text="Player 2: "
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <TextView
-        android:id="@+id/player2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player1"
-        android:layout_marginEnd="8dp"
-        android:layout_alignParentEnd="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="100" />
-
-    <ImageView
-        android:id="@+id/player1_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/score_literal"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/player1_literal"
-        android:src="@drawable/ic_placeholder"
-        tools:src="@drawable/ic_dot" />
-
-    <TextView
-        android:id="@+id/player1_literal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/score_literal"
-        android:layout_marginBottom="8dp"
-        android:layout_toStartOf="@+id/player1"
-        android:text="Player 1: "
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <TextView
-        android:id="@+id/player1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/score_literal"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="100" />
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/spinner_item_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/vertical_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/difficulty_literal" />
 
     <Button
-        android:id="@+id/reset_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Reset" />
-
-    <ImageView
-        android:id="@+id/turn_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player2_literal"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/game_board"
-        android:src="@drawable/ic_placeholder"
-        tools:src="@drawable/ic_dot" />
-
-    <TextView
-        android:id="@+id/turn_literal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/turn_image"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/game_board"
-        android:gravity="center"
-        android:text="Turn:"
-        android:textColor="@android:color/black" />
-
-    <com.caballero.tictactoe.util.LineView
-        android:id="@+id/win_line"
+        android:id="@+id/start_game_button"
+        style="@style/CustomButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toStartOf="@+id/player2_image"
-        android:layout_marginEnd="8dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Start Game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

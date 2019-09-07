@@ -152,8 +152,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/player1"
-        android:layout_marginEnd="8dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="100" />
 
@@ -197,6 +197,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:visibility="invisible"
         android:text="Reset" />
 
     <ImageView
@@ -221,11 +222,35 @@
         android:text="Turn:"
         android:textColor="@android:color/black" />
 
+    <TextView
+        android:id="@+id/single_player_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/difficulty_status"
+        android:layout_toEndOf="@id/game_board"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="Single Player" />
+
+    <TextView
+        android:id="@+id/difficulty_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/game_board"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="Hard" />
+
     <com.caballero.tictactoe.util.LineView
         android:id="@+id/win_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toStartOf="@+id/player2_image"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/player2_image" />
 
 </RelativeLayout>

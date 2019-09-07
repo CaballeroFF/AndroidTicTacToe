@@ -3,6 +3,7 @@ package com.caballero.tictactoe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -162,5 +163,4 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 8/29/2019 make better title
     // TODO: 8/29/2019 make theme
-    // TODO: 9/5/2019 landscape layout 
 }
