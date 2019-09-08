@@ -1,4 +1,4 @@
-package com.caballero.tictactoe.components;
+package com.caballero.tictactoe.util;
 
 import android.support.annotation.NonNull;
 

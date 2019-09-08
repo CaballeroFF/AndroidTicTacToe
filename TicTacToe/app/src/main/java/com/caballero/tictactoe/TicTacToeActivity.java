@@ -13,8 +13,7 @@ import com.caballero.tictactoe.ai.HardTicTacToeAi;
 import com.caballero.tictactoe.ai.MediumTicTacToeAi;
 import com.caballero.tictactoe.ai.RandomTicTacToeAI;
 import com.caballero.tictactoe.ai.TicTacToeAi;
-import com.caballero.tictactoe.components.GameBoard;
-import com.caballero.tictactoe.components.Position;
+import com.caballero.tictactoe.util.Position;
 import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
@@ -32,7 +31,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     public static final String BOARD_VALUES1 = "com.caballero.tictactoe.board.values1";
     public static final String BOARD_VALUES2 = "com.caballero.tictactoe.board.values2";
     public static final String BOARD_VALUES3 = "com.caballero.tictactoe.board.values3";
-    public static final String GAME_BOARD = "com.caballero.tictactoe.tictactoeactivity.game.board";
 
     private static final String TAG = "TicTacToeActivity";
 
@@ -50,7 +48,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private TicTacToeMachine machine;
     private TicTacToeAi ai;
-    private GameBoard gameBoard;
 
     private String winType = LineView.EMPTY;
     private String difficulty;
@@ -80,7 +77,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         difficulty = intent.getStringExtra(MainActivity.DIFFICULTY_EXTRA);
 
         ai = getAi(playerOneImgRes, playerTwoImgRes, difficulty);
-        gameBoard = new GameBoard();
 
         Log.d(TAG, "onCreate: " + (playerOneImgRes == R.drawable.ic_dot));
 
@@ -110,7 +106,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         outState.putStringArray(BOARD_VALUES1, boardValues[0]);
         outState.putStringArray(BOARD_VALUES2, boardValues[1]);
         outState.putStringArray(BOARD_VALUES3, boardValues[2]);
-        outState.putParcelable(GAME_BOARD, gameBoard);
     }
 
     @Override
@@ -125,7 +120,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         boardValues[1] = savedInstanceState.getStringArray(BOARD_VALUES2);
         boardValues[2] = savedInstanceState.getStringArray(BOARD_VALUES3);
         turnImage.setImageResource(savedInstanceState.getInt(TURN_IMG, R.drawable.ic_dot));
-        gameBoard = savedInstanceState.getParcelable(GAME_BOARD);
         updateScores();
         restoreBoardValues();
     }
@@ -278,19 +272,16 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             tileImg = playerOneImgRes;
             turnImg = playerTwoImgRes;
         }
-        gameBoard.makeMove(getViewPosition(view.getId()), tileImg);
         ((ImageView) view).setImageResource(tileImg);
         view.setTag(tileImg);
         turnImage.setImageResource(turnImg);
     }
 
     public boolean isLegalMove(View view) {
-        gameBoard.isMoveLegal(getViewPosition(view.getId()));
         return view.getTag().toString().equals(EMPTY_VALUE);
     }
 
     public int evaluateBoard() {
-        Log.d("GameBoard", "evaluateBoard: " + gameBoard.evaluateForWin());
         if (evaluateForWin()) {
             if (player1Turn) {
                 player1Wins();
@@ -506,5 +497,4 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         }
     }
     // TODO: 8/18/2019 potential bug: keep game over state after orientation change
-    // TODO: 9/6/2019 connect game board
 }

@@ -1,6 +1,6 @@
 package com.caballero.tictactoe.ai;
 
-import com.caballero.tictactoe.components.Position;
+import com.caballero.tictactoe.util.Position;
 
 import java.util.Random;
 

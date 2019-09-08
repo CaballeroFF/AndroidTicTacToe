@@ -1,7 +1,7 @@
 package com.caballero.tictactoe.ai;
 
-import com.caballero.tictactoe.components.GameBoard;
-import com.caballero.tictactoe.components.Position;
+import com.caballero.tictactoe.TicTacToeActivity;
+import com.caballero.tictactoe.util.Position;
 
 public class MediumTicTacToeAi extends TicTacToeAi {
 
@@ -17,12 +17,11 @@ public class MediumTicTacToeAi extends TicTacToeAi {
     }
 
     private Position analyzeMove(String[][] board) {
-
         // defend or attack rows
-        for (int row = 0; row < GameBoard.ROWS; row++) {
+        for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
             Position position = new Position(0, 0);
             int count = 0;
-            for (int col = 0; col < GameBoard.COLS; col++) {
+            for (int col = 0; col < TicTacToeActivity.COLS; col++) {
                 if (String.valueOf(playerHuman).equals(board[row][col])) {
                     count -= 1;
                 } else if (String.valueOf(playerComputer).equals(board[row][col])) {
@@ -37,10 +36,10 @@ public class MediumTicTacToeAi extends TicTacToeAi {
         }
 
         // defend or attack cols
-        for (int col = 0; col < GameBoard.COLS; col++) {
+        for (int col = 0; col < TicTacToeActivity.COLS; col++) {
             Position position = new Position(0, 0);
             int count = 0;
-            for (int row = 0; row < GameBoard.ROWS; row++) {
+            for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
                 if (String.valueOf(playerHuman).equals(board[row][col])) {
                     count -= 1;
                 } else if (String.valueOf(playerComputer).equals(board[row][col])) {
@@ -59,7 +58,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
         int col = 0;
         Position position = new Position(0, 0);
 
-        for (int row = 0; row < GameBoard.ROWS; row++) {
+        for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
             if (String.valueOf(playerHuman).equals(board[row][col])) {
                 count -= 1;
             } else if (String.valueOf(playerComputer).equals(board[row][col])) {
@@ -76,7 +75,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
         // top right diagonal
         count = 0;
         col = 2;
-        for (int row = 0; row < GameBoard.ROWS; row++) {
+        for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
             if (String.valueOf(playerHuman).equals(board[row][col])) {
                 count -= 1;
             } else if (String.valueOf(playerComputer).equals(board[row][col])) {
@@ -90,31 +89,31 @@ public class MediumTicTacToeAi extends TicTacToeAi {
             return position;
         }
 
-        if (GameBoard.EMPTY_VALUE.equals(board[1][1])) {
+        if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][1])) {
             position.setPosition(1,1);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[0][0])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][0])) {
             position.setPosition(0,0);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[2][0])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][0])) {
             position.setPosition(2,0);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[0][2])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][2])) {
             position.setPosition(0,2);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[2][2])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][2])) {
             position.setPosition(2,2);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[1][0])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][0])) {
             position.setPosition(1,0);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[2][1])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][1])) {
             position.setPosition(2,1);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[1][2])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][2])) {
             position.setPosition(1,2);
         }
-        else if (GameBoard.EMPTY_VALUE.equals(board[0][1])) {
+        else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][1])) {
             position.setPosition(0,1);
         }
         return position;
