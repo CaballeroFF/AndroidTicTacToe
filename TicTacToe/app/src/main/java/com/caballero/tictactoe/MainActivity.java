@@ -47,10 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: 1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: 2");
 
         initViews();
     }
@@ -61,16 +59,6 @@ public class MainActivity extends AppCompatActivity {
         setListeners();
     }
 
-    @Override
-    public Resources.Theme getTheme() {
-//        Resources.Theme theme = super.getTheme();
-//        if(true){
-//            theme.applyStyle(R.style.AlternativeTheme, true);
-//        }
-//        return theme;
-        Log.d(TAG, "getTheme: ");
-        return super.getTheme();
-    }
 
     private void initViews() {
         buttonStartGame = findViewById(R.id.start_game_button);
@@ -154,15 +142,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String piece;
                 if (isPieceX) {
-                    piece = "x";
+                    piece = BoardView.X;
                     isPieceX = false;
                 } else {
-                    piece = "o";
+                    piece = BoardView.O;
                     isPieceX = true;
                 }
                 boardView.drawPiece(boardView.getTicTacToeTile(), piece);
             }
         });
+
     }
 
     private void startGame() {

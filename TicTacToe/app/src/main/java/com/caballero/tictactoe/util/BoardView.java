@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -84,6 +85,10 @@ public class BoardView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        oneThirdWidth = getWidth() / 3f;
+        oneThirdHeight = getHeight() / 3f;
+        twoThirdWidth = 2f * getWidth() / 3f;
+        twoThirdHeight = 2f * getHeight() / 3f;
 
         drawTileBackground(canvas);
 
@@ -100,8 +105,8 @@ public class BoardView extends View {
                 canvas.drawLine(lineStartX, lineStartY, lineEndX, lineEndY, brush);
                 updateWinLine(lineType);
             }
-            isClearing = false;
         }
+
         super.onDraw(canvas);
     }
 
@@ -248,10 +253,6 @@ public class BoardView extends View {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                     pointClicked.set(event.getX(), event.getY());
-                    oneThirdWidth = getWidth() / 3f;
-                    oneThirdHeight = getHeight() / 3f;
-                    twoThirdWidth = 2f * getWidth() / 3f;
-                    twoThirdHeight = 2f * getHeight() / 3f;
                 }
                 return false;
             }
@@ -271,6 +272,7 @@ public class BoardView extends View {
     }
 
     public void draw() {
+        isClearing = false;
         invalidate();
         requestLayout();
     }
@@ -313,10 +315,10 @@ public class BoardView extends View {
     }
 
     public void drawWinLine(String lineType) {
-        float oneThirdWidth = getWidth() / 3f;
-        float twoThirdWidth = 2f * getWidth() / 3f;
-        float oneThirdHeight = getHeight() / 3f;
-        float twoThirdHeight = 2f * getHeight() / 3f;
+//        float oneThirdWidth = getWidth() / 3f;
+//        float twoThirdWidth = 2f * getWidth() / 3f;
+//        float oneThirdHeight = getHeight() / 3f;
+//        float twoThirdHeight = 2f * getHeight() / 3f;
         canDrawWinLine = true;
         switch (lineType) {
             case TOP_LEFT_DIAGONAL:
@@ -394,6 +396,10 @@ public class BoardView extends View {
         draw();
     }
 
+    public Map<Point, String> getTilePieces() {
+        return tilePieces;
+    }
+
     public void setOnFinishedDrawingListener(OnFinishedDrawingListener drawingListener) {
         listener = drawingListener;
     }
@@ -401,4 +407,5 @@ public class BoardView extends View {
     public interface OnFinishedDrawingListener {
         void finishedDrawing();
     }
+
 }

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.util.Log;
 
 public class CustomDialog extends AppCompatDialogFragment {
+    private static final String TAG = "TicTacToeCustomDialog";
 
     public static final String DIALOG_TITLE = "com.caballero.tictactoe.util.dialog.title";
     public static final String DIALOG_MESSAGE = "com.caballero.tictactoe.util.dialog.message";

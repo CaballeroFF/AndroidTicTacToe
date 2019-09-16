@@ -253,6 +253,6 @@
         android:id="@+id/board_view"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/score_literal"
-        android:visibility="invisible"/>
+        android:visibility="visible"/>
 
 </android.support.constraint.ConstraintLayout>
