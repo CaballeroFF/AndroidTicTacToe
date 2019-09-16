@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
@@ -21,16 +22,16 @@ public class LegalMove implements TicTacToeState {
     }
 
     @Override
-    public void makeMove(View view) {
+    public void makeMove(Point point) {
         Log.d(TAG, "makeMove: evaluating move");
     }
 
     @Override
-    public void evaluateMove(View view) {
+    public void evaluateMove(Point point) {
         TicTacToeActivity activity = ticTacToeMachine.getWeakReference().get();
-        if (activity.isLegalMove(view)) {
+        if (activity.isLegalMove(point)) {
             Log.d(TAG, "evaluateMove: legal");
-            activity.updateUI(view);
+            activity.updateUI(point);
             ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getEvaluateState());
             ticTacToeMachine.evaluateBoard();
         } else {

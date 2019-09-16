@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
@@ -21,12 +22,12 @@ public class IsGameOver implements TicTacToeState {
     }
 
     @Override
-    public void makeMove(View view) {
+    public void makeMove(Point point) {
         Log.d(TAG, "makeMove: evaluating board");
     }
 
     @Override
-    public void evaluateMove(View view) {
+    public void evaluateMove(Point point) {
         Log.d(TAG, "evaluateMove: evaluating move");
     }
 

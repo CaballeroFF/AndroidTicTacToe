@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
@@ -19,14 +20,14 @@ public class PlayerMove implements TicTacToeState {
     }
 
     @Override
-    public void makeMove(View view) {
+    public void makeMove(Point point) {
         Log.d(TAG, "makeMove: player move");
         ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
-        ticTacToeMachine.evaluateMove(view);
+        ticTacToeMachine.evaluateMove(point);
     }
 
     @Override
-    public void evaluateMove(View view) {
+    public void evaluateMove(Point point) {
         Log.d(TAG, "evaluateMove: make move first");
     }
 

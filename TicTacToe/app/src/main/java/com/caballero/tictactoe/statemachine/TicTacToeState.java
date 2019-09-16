@@ -1,14 +1,15 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.view.View;
 
 public interface TicTacToeState {
 
     void idle();
 
-    void makeMove(View view);
+    void makeMove(Point point);
 
-    void evaluateMove(View view);
+    void evaluateMove(Point point);
 
     void evaluateBoard();
 

@@ -125,7 +125,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        machine.makeMove(v);
+        machine.makeMove(getViewPosition(v.getId()));
     }
 
     @Override
@@ -209,7 +209,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         ai.setOnMoveMadeListener(new TicTacToeAi.OnMoveListener() {
             @Override
             public void moveResults(Point position) {
-                machine.makeMove(imageViews[position.x][position.y]);
+                machine.makeMove(position);
             }
         });
     }
@@ -277,20 +277,21 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         player2Text.setText(String.valueOf(player2Score));
     }
 
-    public void updateUI(View view) {
+    public void updateUI(Point point) {
         int tileImg = playerTwoImgRes;
         int turnImg = playerOneImgRes;
         if (player1Turn) {
             tileImg = playerOneImgRes;
             turnImg = playerTwoImgRes;
         }
-        ((ImageView) view).setImageResource(tileImg);
-        view.setTag(tileImg);
+        imageViews[point.x][point.y].setImageResource(tileImg);
+        imageViews[point.x][point.y].setTag(tileImg);
         turnImage.setImageResource(turnImg);
     }
 
-    public boolean isLegalMove(View view) {
-        return view.getTag().toString().equals(EMPTY_VALUE);
+    public boolean isLegalMove(Point point) {
+        return EMPTY_VALUE.equals(boardValues[point.x][point.y]);
+//        return view.getTag().toString().equals(EMPTY_VALUE);
     }
 
     public int evaluateBoard() {

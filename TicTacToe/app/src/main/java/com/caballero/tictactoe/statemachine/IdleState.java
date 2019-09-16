@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
@@ -25,18 +26,18 @@ public class IdleState implements TicTacToeState {
     }
 
     @Override
-    public void makeMove(View view) {
+    public void makeMove(Point point) {
         Log.d(TAG, "makeMove: idle");
         if (ticTacToeMachine.isPlayerTurn()) {
             ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getPlayerMove());
         } else {
             ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getAiMove());
         }
-        ticTacToeMachine.makeMove(view);
+        ticTacToeMachine.makeMove(point);
     }
 
     @Override
-    public void evaluateMove(View view) {
+    public void evaluateMove(Point point) {
         Log.d(TAG, "evaluateMove: make move first");
     }
 

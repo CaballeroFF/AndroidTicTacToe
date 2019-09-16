@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -20,24 +21,23 @@ public class AiMove implements TicTacToeState {
     }
 
     @Override
-    public void makeMove(View view) {
+    public void makeMove(Point point) {
         Log.d(TAG, "makeMove: player 2 move");
-//        ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
-//        ticTacToeMachine.evaluateMove(view);
+
         long delay = ticTacToeMachine.isSinglePlayer() ? 500 : 0;
-        final View v = view;
+        final Point p = point;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 ticTacToeMachine.setTicTacToeState(ticTacToeMachine.getLegalMove());
-                ticTacToeMachine.evaluateMove(v);
+                ticTacToeMachine.evaluateMove(p);
             }
         }, delay);
     }
 
     @Override
-    public void evaluateMove(View view) {
+    public void evaluateMove(Point point) {
         Log.d(TAG, "evaluateMove: make move first");
     }
 

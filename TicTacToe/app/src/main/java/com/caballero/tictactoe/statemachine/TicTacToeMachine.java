@@ -1,5 +1,6 @@
 package com.caballero.tictactoe.statemachine;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.View;
 
@@ -10,12 +11,6 @@ import java.lang.ref.WeakReference;
 public class TicTacToeMachine {
 
     private static final String TAG = "statemachine";
-    public static final String IDLE_STATE = "com.caballero.tictactoe.statemachine.state.idle";
-    public static final String PLAYER_STATE = "com.caballero.tictactoe.statemachine.state.player";
-    public static final String AI_STATE = "com.caballero.tictactoe.statemachine.state.ai";
-    public static final String LEGAL_MOVE_STATE = "com.caballero.tictactoe.statemachine.state.legal.move";
-    public static final String EVALUATE_BOARD_STATE = "com.caballero.tictactoe.statemachine.state.evaluate.board";
-    public static final String GAME_OVER_STATE = "com.caballero.tictactoe.statemachine.state.game.over";
 
     private TicTacToeState idleState;
     private TicTacToeState playerMove;
@@ -77,12 +72,12 @@ public class TicTacToeMachine {
         ticTacToeState.idle();
     }
 
-    public void makeMove(View view) {
-        ticTacToeState.makeMove(view);
+    public void makeMove(Point point) {
+        ticTacToeState.makeMove(point);
     }
 
-    public void evaluateMove(View view) {
-        ticTacToeState.evaluateMove(view);
+    public void evaluateMove(Point point) {
+        ticTacToeState.evaluateMove(point);
     }
 
     public void evaluateBoard() {
