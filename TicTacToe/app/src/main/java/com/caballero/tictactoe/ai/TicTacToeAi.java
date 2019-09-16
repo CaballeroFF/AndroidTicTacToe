@@ -1,6 +1,6 @@
 package com.caballero.tictactoe.ai;
 
-import com.caballero.tictactoe.util.Position;
+import android.graphics.Point;
 
 public abstract class TicTacToeAi {
 
@@ -17,12 +17,11 @@ public abstract class TicTacToeAi {
 
     public abstract void makeMove(String[][] board);
 
-    public void moveListenerResult(Position position) {
+    public void moveListenerResult(Point position) {
         if (listener != null) {
             listener.moveResults(position);
         }
     }
-
 
 
     public void setOnMoveMadeListener(OnMoveListener moveListener) {
@@ -30,6 +29,6 @@ public abstract class TicTacToeAi {
     }
 
     public interface OnMoveListener {
-        void moveResults(Position position);
+        void moveResults(Point position);
     }
 }

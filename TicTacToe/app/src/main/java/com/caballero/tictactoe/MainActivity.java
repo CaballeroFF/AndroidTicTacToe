@@ -1,6 +1,7 @@
 package com.caballero.tictactoe;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.caballero.tictactoe.adapters.SpinnerAdapter;
+import com.caballero.tictactoe.util.BoardView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -37,19 +39,73 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerDifficulty;
     private TextView difficultyLiteral;
     private TextView playerTwoLiteral;
+    private BoardView boardView;
 
     private boolean isSinglePlayer;
 
+    private boolean isPieceX;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: 1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: 2");
+
         initViews();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setListeners();
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+//        Resources.Theme theme = super.getTheme();
+//        if(true){
+//            theme.applyStyle(R.style.AlternativeTheme, true);
+//        }
+//        return theme;
+        Log.d(TAG, "getTheme: ");
+        return super.getTheme();
+    }
+
+    private void initViews() {
+        buttonStartGame = findViewById(R.id.start_game_button);
+        spinnerPlayerTwoImage = findViewById(R.id.main_image_spinner_player_2);
+        spinnerPlayerImage = findViewById(R.id.main_image_spinner);
+        spinnerPlayers = findViewById(R.id.main_spinner_players);
+        spinnerDifficulty = findViewById(R.id.main_spinner_difficulty);
+        difficultyLiteral = findViewById(R.id.difficulty_literal);
+        playerTwoLiteral = findViewById(R.id.main_player2_image_literal);
+
+        boardView = findViewById(R.id.board_view);
+        boardView.setStrokeWidth(30f);
+        boardView.startTouchListener();
+        boardView.draw();
+
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, PLAYER_IMAGES);
+        spinnerPlayerImage.setAdapter(spinnerAdapter);
+        spinnerPlayerImage.setSelection(0);
+
+        SpinnerAdapter spinnerAdapterTwo = new SpinnerAdapter(this, PLAYER_IMAGES);
+        spinnerPlayerTwoImage.setAdapter(spinnerAdapterTwo);
+        spinnerPlayerTwoImage.setSelection(1);
+
+        ArrayAdapter<String> adapterPlayer = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PLAYERS);
+        adapterPlayer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPlayers.setAdapter(adapterPlayer);
+        spinnerPlayers.setSelection(0);
+
+        ArrayAdapter<String> adapterDifficulty = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, DIFFICULTY);
+        adapterDifficulty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDifficulty.setAdapter(adapterDifficulty);
+        spinnerDifficulty.setSelection(0);
+    }
+
+    private void setListeners() {
         buttonStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,34 +148,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
 
-    private void initViews() {
-        buttonStartGame = findViewById(R.id.start_game_button);
-        spinnerPlayerTwoImage = findViewById(R.id.main_image_spinner_player_2);
-        spinnerPlayerImage = findViewById(R.id.main_image_spinner);
-        spinnerPlayers = findViewById(R.id.main_spinner_players);
-        spinnerDifficulty = findViewById(R.id.main_spinner_difficulty);
-        difficultyLiteral = findViewById(R.id.difficulty_literal);
-        playerTwoLiteral = findViewById(R.id.main_player2_image_literal);
-
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, PLAYER_IMAGES);
-        spinnerPlayerImage.setAdapter(spinnerAdapter);
-        spinnerPlayerImage.setSelection(0);
-
-        SpinnerAdapter spinnerAdapterTwo = new SpinnerAdapter(this, PLAYER_IMAGES);
-        spinnerPlayerTwoImage.setAdapter(spinnerAdapterTwo);
-        spinnerPlayerTwoImage.setSelection(1);
-
-        ArrayAdapter<String> adapterPlayer = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PLAYERS);
-        adapterPlayer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPlayers.setAdapter(adapterPlayer);
-        spinnerPlayers.setSelection(0);
-
-        ArrayAdapter<String> adapterDifficulty = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, DIFFICULTY);
-        adapterDifficulty.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDifficulty.setAdapter(adapterDifficulty);
-        spinnerDifficulty.setSelection(0);
+        boardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String piece;
+                if (isPieceX) {
+                    piece = "x";
+                    isPieceX = false;
+                } else {
+                    piece = "o";
+                    isPieceX = true;
+                }
+                boardView.drawPiece(boardView.getTicTacToeTile(), piece);
+            }
+        });
     }
 
     private void startGame() {
@@ -163,4 +206,5 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 8/29/2019 make better title
     // TODO: 8/29/2019 make theme
+    // TODO: 9/9/2019 replace grid view with board view
 }

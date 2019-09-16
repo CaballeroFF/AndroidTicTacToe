@@ -1,10 +1,10 @@
 package com.caballero.tictactoe.ai;
 
-import com.caballero.tictactoe.util.Position;
+import android.graphics.Point;
 
 import java.util.Random;
 
-public class RandomTicTacToeAI extends TicTacToeAi{
+public class RandomTicTacToeAI extends TicTacToeAi {
 
     private static final String TAG = "RandomTicTacToeAI";
 
@@ -17,7 +17,7 @@ public class RandomTicTacToeAI extends TicTacToeAi{
 
     @Override
     public void makeMove(String[][] board) {
-        Position position = new Position(getRow(), getCol());
+        Point position = new Point(getRow(), getCol());
         moveListenerResult(position);
     }
 

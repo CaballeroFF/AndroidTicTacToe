@@ -1,7 +1,8 @@
 package com.caballero.tictactoe.ai;
 
+import android.graphics.Point;
+
 import com.caballero.tictactoe.TicTacToeActivity;
-import com.caballero.tictactoe.util.Position;
 
 public class MediumTicTacToeAi extends TicTacToeAi {
 
@@ -12,14 +13,14 @@ public class MediumTicTacToeAi extends TicTacToeAi {
 
     @Override
     public void makeMove(String[][] board) {
-        Position position = analyzeMove(board);
+        Point position = analyzeMove(board);
         moveListenerResult(position);
     }
 
-    private Position analyzeMove(String[][] board) {
+    private Point analyzeMove(String[][] board) {
         // defend or attack rows
         for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
-            Position position = new Position(0, 0);
+            Point position = new Point(0, 0);
             int count = 0;
             for (int col = 0; col < TicTacToeActivity.COLS; col++) {
                 if (String.valueOf(playerHuman).equals(board[row][col])) {
@@ -27,7 +28,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
                 } else if (String.valueOf(playerComputer).equals(board[row][col])) {
                     count += 1;
                 } else {
-                    position.setPosition(row, col);
+                    position.set(row, col);
                 }
             }
             if (count < -1 || count > 1) {
@@ -37,7 +38,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
 
         // defend or attack cols
         for (int col = 0; col < TicTacToeActivity.COLS; col++) {
-            Position position = new Position(0, 0);
+            Point position = new Point(0, 0);
             int count = 0;
             for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
                 if (String.valueOf(playerHuman).equals(board[row][col])) {
@@ -45,7 +46,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
                 } else if (String.valueOf(playerComputer).equals(board[row][col])) {
                     count += 1;
                 } else {
-                    position.setPosition(row, col);
+                    position.set(row, col);
                 }
             }
             if (count < -1 || count > 1) {
@@ -56,7 +57,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
         //top left diagonal
         int count = 0;
         int col = 0;
-        Position position = new Position(0, 0);
+        Point position = new Point(0, 0);
 
         for (int row = 0; row < TicTacToeActivity.ROWS; row++) {
             if (String.valueOf(playerHuman).equals(board[row][col])) {
@@ -64,7 +65,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
             } else if (String.valueOf(playerComputer).equals(board[row][col])) {
                 count += 1;
             } else {
-                position.setPosition(row, col);
+                position.set(row, col);
             }
             col++;
         }
@@ -81,7 +82,7 @@ public class MediumTicTacToeAi extends TicTacToeAi {
             } else if (String.valueOf(playerComputer).equals(board[row][col])) {
                 count += 1;
             } else {
-                position.setPosition(row, col);
+                position.set(row, col);
             }
             col--;
         }
@@ -90,31 +91,31 @@ public class MediumTicTacToeAi extends TicTacToeAi {
         }
 
         if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][1])) {
-            position.setPosition(1,1);
+            position.set(1,1);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][0])) {
-            position.setPosition(0,0);
+            position.set(0,0);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][0])) {
-            position.setPosition(2,0);
+            position.set(2,0);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][2])) {
-            position.setPosition(0,2);
+            position.set(0,2);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][2])) {
-            position.setPosition(2,2);
+            position.set(2,2);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][0])) {
-            position.setPosition(1,0);
+            position.set(1,0);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[2][1])) {
-            position.setPosition(2,1);
+            position.set(2,1);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[1][2])) {
-            position.setPosition(1,2);
+            position.set(1,2);
         }
         else if (TicTacToeActivity.EMPTY_VALUE.equals(board[0][1])) {
-            position.setPosition(0,1);
+            position.set(0,1);
         }
         return position;
     }

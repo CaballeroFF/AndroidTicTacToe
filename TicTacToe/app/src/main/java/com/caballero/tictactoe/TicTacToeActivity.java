@@ -1,9 +1,9 @@
 package com.caballero.tictactoe;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,8 +13,8 @@ import com.caballero.tictactoe.ai.HardTicTacToeAi;
 import com.caballero.tictactoe.ai.MediumTicTacToeAi;
 import com.caballero.tictactoe.ai.RandomTicTacToeAI;
 import com.caballero.tictactoe.ai.TicTacToeAi;
-import com.caballero.tictactoe.util.Position;
 import com.caballero.tictactoe.statemachine.TicTacToeMachine;
+import com.caballero.tictactoe.util.BoardView;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
 
@@ -45,6 +45,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private TextView playerStatus;
     private TextView difficultyStatus;
     private Button resetButton;
+    private BoardView boardView;
 
     private TicTacToeMachine machine;
     private TicTacToeAi ai;
@@ -77,8 +78,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         difficulty = intent.getStringExtra(MainActivity.DIFFICULTY_EXTRA);
 
         ai = getAi(playerOneImgRes, playerTwoImgRes, difficulty);
-
-        Log.d(TAG, "onCreate: " + (playerOneImgRes == R.drawable.ic_dot));
 
         initViews();
     }
@@ -152,6 +151,10 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         winLine = findViewById(R.id.win_line);
         winLine.setStrokeWidth(20f);
 
+        boardView = findViewById(R.id.board_view);
+        boardView.startTouchListener();
+        boardView.draw();
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 String imageId = "button_" + row + col;
@@ -194,10 +197,19 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        boardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String piece = "o";
+
+                boardView.drawPiece(boardView.getTicTacToeTile(), piece);
+            }
+        });
+
         ai.setOnMoveMadeListener(new TicTacToeAi.OnMoveListener() {
             @Override
-            public void moveResults(Position position) {
-                machine.makeMove(imageViews[position.getRow()][position.getCol()]);
+            public void moveResults(Point position) {
+                machine.makeMove(imageViews[position.x][position.y]);
             }
         });
     }
@@ -450,35 +462,35 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         ai.makeMove(boardValues);
     }
 
-    private Position getViewPosition(int id) {
-        Position position = new Position(0, 0);
+    private Point getViewPosition(int id) {
+        Point position = new Point(0, 0);
         switch (id) {
             case R.id.button_00:
-                position.setPosition(0, 0);
+                position.set(0, 0);
                 break;
             case R.id.button_01:
-                position.setPosition(0, 1);
+                position.set(0, 1);
                 break;
             case R.id.button_02:
-                position.setPosition(0, 2);
+                position.set(0, 2);
                 break;
             case R.id.button_10:
-                position.setPosition(1, 0);
+                position.set(1, 0);
                 break;
             case R.id.button_11:
-                position.setPosition(1, 1);
+                position.set(1, 1);
                 break;
             case R.id.button_12:
-                position.setPosition(1, 2);
+                position.set(1, 2);
                 break;
             case R.id.button_20:
-                position.setPosition(2, 0);
+                position.set(2, 0);
                 break;
             case R.id.button_21:
-                position.setPosition(2, 1);
+                position.set(2, 1);
                 break;
             case R.id.button_22:
-                position.setPosition(2, 2);
+                position.set(2, 2);
                 break;
         }
         return position;
@@ -496,5 +508,4 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                 return new RandomTicTacToeAI(playerOne, playerTwo);
         }
     }
-    // TODO: 8/18/2019 potential bug: keep game over state after orientation change
 }
