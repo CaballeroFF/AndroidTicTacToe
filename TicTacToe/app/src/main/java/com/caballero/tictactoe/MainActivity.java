@@ -195,5 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 8/29/2019 make better title
     // TODO: 8/29/2019 make theme
-    // TODO: 9/9/2019 replace grid view with board view
+    // TODO: 9/16/2019 clean boardview class
+    // TODO: 9/16/2019 clean tictactoe activity class
+    // TODO: 9/16/2019 clean tictactoe layout
 }
