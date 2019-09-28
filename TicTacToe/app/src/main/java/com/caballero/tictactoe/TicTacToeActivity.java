@@ -1,12 +1,11 @@
 package com.caballero.tictactoe;
 
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +19,7 @@ import com.caballero.tictactoe.statemachine.TicTacToeMachine;
 import com.caballero.tictactoe.util.BoardView;
 import com.caballero.tictactoe.util.CustomDialog;
 import com.caballero.tictactoe.util.LineView;
+import com.caballero.tictactoe.util.ThemeUtils;
 
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private static final String TAG = "TicTacToeActivity";
 
-//    private LineView winLine;
+    //    private LineView winLine;
 //    private ImageView[][] imageViews = new ImageView[ROWS][COLS];
     private String[][] boardValues = new String[ROWS][COLS];
     private ImageView turnImage;
@@ -153,6 +153,14 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 //        winLine.setStrokeWidth(20f);
 
         boardView = findViewById(R.id.board_view);
+        if (playerOneImgRes == R.drawable.ic_x) {
+            boardView.setPieceColor(BoardView.X, ThemeUtils.getAccentColor(this));
+            boardView.setPieceColor(BoardView.O, ThemeUtils.getPrimaryColor(this));
+        } else {
+            boardView.setPieceColor(BoardView.X, ThemeUtils.getPrimaryColor(this));
+            boardView.setPieceColor(BoardView.O, ThemeUtils.getAccentColor(this));
+        }
+        boardView.setStrokeWidth(30f);
         boardView.startTouchListener();
         boardView.draw();
 
@@ -167,8 +175,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         }
 
         player1Img.setImageResource(playerOneImgRes);
+        player1Img.setImageTintList(
+                ColorStateList.valueOf(ThemeUtils.getAccentColor(this)));
         player2Img.setImageResource(playerTwoImgRes);
         turnImage.setImageResource(playerOneImgRes);
+        turnImage.setImageTintList(ColorStateList.valueOf(ThemeUtils.getAccentColor(this)));
         player1Turn = true;
         turn = 0;
         player1Score = 0;
@@ -230,7 +241,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 String tag = EMPTY_VALUE;// = imageViews[row][col].getTag().toString();
-                if (BoardView.O.equals(map.get(new Point(row, col)))){
+                if (BoardView.O.equals(map.get(new Point(row, col)))) {
                     tag = String.valueOf(R.drawable.ic_dot);
                 } else if (BoardView.X.equals(map.get(new Point(row, col)))) {
                     tag = String.valueOf(R.drawable.ic_x);
@@ -273,6 +284,9 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         if (singlePlayer) {
             playerStatusString = "Single Player";
             difficultyStatus.setText(difficulty);
+            if (MainActivity.HARD_DIFFICULTY.equals(difficulty)) {
+                difficultyStatus.setTextColor(ThemeUtils.getAccentColor(this));
+            }
             difficultyStatus.setVisibility(View.VISIBLE);
         }
         playerStatus.setText(playerStatusString);
@@ -300,6 +314,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 //        imageViews[point.x][point.y].setImageResource(tileImg);
 //        imageViews[point.x][point.y].setTag(tileImg);
         turnImage.setImageResource(turnImg);
+        if (playerOneImgRes == turnImg) {
+            turnImage.setImageTintList(ColorStateList.valueOf(ThemeUtils.getAccentColor(this)));
+        } else {
+            turnImage.setImageTintList(ColorStateList.valueOf(Color.BLACK));
+        }
     }
 
     public boolean isLegalMove(Point point) {
@@ -381,7 +400,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 String tag = EMPTY_VALUE;// = imageViews[row][col].getTag().toString();
-                if (BoardView.O.equals(map.get(new Point(row, col)))){
+                if (BoardView.O.equals(map.get(new Point(row, col)))) {
                     tag = String.valueOf(R.drawable.ic_dot);
                 } else if (BoardView.X.equals(map.get(new Point(row, col)))) {
                     tag = String.valueOf(R.drawable.ic_x);
@@ -568,12 +587,11 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private TicTacToeAi getAi(int playerOne, int playerTwo, String difficulty) {
         switch (difficulty) {
-            case MainActivity.EASY_DIFFICULTY:
-                return new RandomTicTacToeAI(playerOne, playerTwo);
             case MainActivity.MEDIUM_DIFFICULTY:
                 return new MediumTicTacToeAi(playerOne, playerTwo);
             case MainActivity.HARD_DIFFICULTY:
                 return new HardTicTacToeAi(playerOne, playerTwo);
+            case MainActivity.EASY_DIFFICULTY:
             default:
                 return new RandomTicTacToeAI(playerOne, playerTwo);
         }

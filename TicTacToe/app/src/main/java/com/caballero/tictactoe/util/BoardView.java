@@ -1,7 +1,6 @@
 package com.caballero.tictactoe.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,7 +8,6 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -31,12 +29,14 @@ public class BoardView extends View {
     public static final String BOTTOM_ROW = "com.caballero.tictactoe.bottom.row";
 
     private Paint brush = new Paint();
+    private Paint pieceBrush = new Paint();
     private PointF pointClicked = new PointF();
     private OnFinishedDrawingListener listener;
 
     private int tiles = 3;
     private int strokeColor = Color.BLACK;
     private int fillColor = Color.WHITE;
+    int pieceColor;
 
     private float strokeWidth = 20f;
     private float pieceOffset = 2 * strokeWidth;
@@ -60,6 +60,10 @@ public class BoardView extends View {
     private boolean isClearing;
 
     private Map<Point, String> tilePieces = new HashMap<>();
+    private Map<String, Integer> pieceColors = new HashMap<String, Integer>() {{
+        put(X, ThemeUtils.getPrimaryColor(getContext()));
+        put(O, ThemeUtils.getAccentColor(getContext()));
+    }};
     private String lineType = EMPTY;
 
     public BoardView(Context context) {
@@ -141,9 +145,10 @@ public class BoardView extends View {
         float xCenter = getXCenter(point);
         float yCenter = getYCenter(point);
 
-        brush.setColor(strokeColor);
-        brush.setStyle(Paint.Style.STROKE);
-        brush.setStrokeWidth(strokeWidth);
+        pieceColor = pieceColors.get(piece);
+        pieceBrush.setColor(pieceColor);
+        pieceBrush.setStyle(Paint.Style.STROKE);
+        pieceBrush.setStrokeWidth(strokeWidth);
 
         PointF start1 = getPointInCircle(xCenter, yCenter, radius, 240);
         PointF end1 = getPointInCircle(xCenter, yCenter, radius, 60);
@@ -151,10 +156,10 @@ public class BoardView extends View {
         PointF end2 = getPointInCircle(xCenter, yCenter, radius, 120);
 
         if (X.equals(piece)) {
-            canvas.drawLine(start1.x, start1.y, end1.x, end1.y, brush);
-            canvas.drawLine(start2.x, start2.y, end2.x, end2.y, brush);
+            canvas.drawLine(start1.x, start1.y, end1.x, end1.y, pieceBrush);
+            canvas.drawLine(start2.x, start2.y, end2.x, end2.y, pieceBrush);
         } else if (O.equals(piece)) {
-            canvas.drawCircle(xCenter, yCenter, radius, brush);
+            canvas.drawCircle(xCenter, yCenter, radius, pieceBrush);
         }
     }
 
@@ -271,7 +276,12 @@ public class BoardView extends View {
         strokeWidth = width;
     }
 
+    public void setPieceColor(String piece, int color) {
+        pieceColors.put(piece, color);
+    }
+
     public void draw() {
+        fillColor = ThemeUtils.getBackgroundColor(getContext());
         isClearing = false;
         invalidate();
         requestLayout();

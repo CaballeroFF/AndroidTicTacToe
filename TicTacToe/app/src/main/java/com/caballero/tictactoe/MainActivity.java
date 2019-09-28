@@ -193,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: 8/29/2019 make better title
-    // TODO: 8/29/2019 make theme
     // TODO: 9/16/2019 clean boardview class
     // TODO: 9/16/2019 clean tictactoe activity class
     // TODO: 9/16/2019 clean tictactoe layout
+    // TODO: 9/27/2019 bug when clicked on boardview border
+    // TODO: 9/27/2019 create singleton theme class to access colors
 }

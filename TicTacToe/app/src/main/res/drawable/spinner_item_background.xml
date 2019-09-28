@@ -13,7 +13,7 @@
                         />
 
                     <!--<gradient android:startColor="#ffea03" android:endColor="#f364e619" android:angle="270" />-->
-                    <stroke android:width="2dp" android:color="@color/colorAccent" />
+                    <stroke android:width="2dp" android:color="@color/accentColor" />
                     <corners android:radius="5dp" />
                 </shape>
             </item>
